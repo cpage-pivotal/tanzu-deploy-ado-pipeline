@@ -16,7 +16,7 @@ variables:
   - name: Space
     value: ado-space
     readonly: false
-  - name: ContainerRepository
+  - name: ServiceConnection
     value: tanzucontainers.azurecr.io
   - name: ContainerRegistry
     value: tanzucontainers.azurecr.io/build/tanzu-java-web-app
@@ -34,7 +34,7 @@ steps:
     displayName: Login to Container Registry
     inputs:
       command: login
-      containerRegistry: $(ContainerRepository)
+      containerRegistry: $(ServiceConnection)
   - task: CmdLine@2
     displayName: Login to Platform
     inputs:
