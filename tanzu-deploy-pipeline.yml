@@ -1,0 +1,63 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: Project
+    value: AMER-West
+    readonly: false
+  - name: Space
+    value: ado-space
+    readonly: false
+  - name: ContainerRepository
+    value: tanzucontainers.azurecr.io
+  - name: ContainerRegistry
+    value: tanzucontainers.azurecr.io/build/tanzu-java-web-app
+  - name: BuildPlanSource
+    value: custom-build-plan
+    readonly: false
+  - name: JavaVersion
+    value: 17
+    readonly: false
+
+steps:
+  - checkout: self
+    persistCredentials: true
+  - task: Docker@2
+    displayName: Login to Container Registry
+    inputs:
+      command: login
+      containerRegistry: $(ContainerRepository)
+  - task: CmdLine@2
+    displayName: Login to Platform
+    inputs:
+      script: |
+        export TANZU_CLI_CEIP_OPT_IN_PROMPT_ANSWER=no
+        wget https://github.com/vmware-tanzu/tanzu-cli/releases/download/v1.3.0/tanzu-cli-linux-amd64.tar.gz -O /tmp/tanzu.tar.gz
+        tar -xvf /tmp/tanzu.tar.gz -C /tmp
+        install /tmp/v1.3.0/tanzu-cli-linux_amd64 /usr/local/bin/tanzu
+        tanzu config eula accept
+        tanzu plugin install --group vmware-tanzu/app-developer
+        
+        tanzu login
+    env:
+      TANZU_API_TOKEN: $(TanzuApiToken)
+
+  - task: CmdLine@2
+    displayName: Deploy Application
+    inputs:
+      script: |
+        tanzu build config --build-plan-source-type=ucp --containerapp-registry $CONTAINERREGISTRY --build-plan-source $BUILDPLANSOURCE
+        tanzu app config build non-secret-env set BP_JVM_VERSION=${JAVAVERSION}
+        
+        tanzu project use $PROJECT
+        tanzu space use $SPACE
+        
+        tanzu deploy -y
