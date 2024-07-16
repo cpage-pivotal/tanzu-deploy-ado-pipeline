@@ -22,13 +22,13 @@ Import [the pipeline YAML](tanzu-deploy-pipeline.yml) into your repo as a projec
 
 Edit your pipeline, and go to Variables. We will create a new variable TanzuApiToken, and mark it as a secret. For the value, enter the token you generated in the Prerequisites.
 
-![Secrets](images/secrets.png)
+<img src="images/secrets.png" width="400">
 
 ### Set up the Service Connection
 
 You will create a service connection to the container registry where your application image will be published. Go to your ADO Project settings, and select Service Connections from the left sidebar menu. Click on "New Service Connection", and select "Docker Registry"
 
-![Service Connection](images/ServiceConnection.png)
+<img src="images/ServiceConnection.png" width="400">
 
 Follow the prompts to configure credentials to your container registry. Make note of your Service Connection Name, which you will supply as a pipeline variable.
 
