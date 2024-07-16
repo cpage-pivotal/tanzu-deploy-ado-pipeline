@@ -1,8 +1,3 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
   - main
 
@@ -11,17 +6,17 @@ pool:
 
 variables:
   - name: Project
-    value: AMER-West
+    value: <<ENTER VALUE>>
     readonly: false
   - name: Space
-    value: ado-space
+    value: <<ENTER VALUE>>
     readonly: false
   - name: ServiceConnection
-    value: tanzucontainers.azurecr.io
+    value: <<ENTER VALUE>>
   - name: ContainerRegistry
-    value: tanzucontainers.azurecr.io/build/tanzu-java-web-app
+    value: <<ENTER VALUE>>
   - name: BuildPlanSource
-    value: custom-build-plan
+    value: simple.tanzu.vmware.com
     readonly: false
   - name: JavaVersion
     value: 17
